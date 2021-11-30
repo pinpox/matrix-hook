@@ -17,3 +17,27 @@ Configuration is done with environment variables.
 | MX_ID         | Matrix user ID      | `@mr_panic:matrix.org`       |
 | MX_ROOMID     | Matrix room to join | `!ilXTTTTTTuDmsz:matrix.org` |
 | MX_TOKEN      | Matrix access token | `rstienrsrseintrisetnrte`    |
+
+
+# Nix
+
+For Nix/Nixos users a `flake.nix` is provided to simplify the build. It also
+privides app to test the hooks with mocked data from `mock.json`
+
+### Build
+
+```sh
+nix build
+```
+
+### Run directly
+
+```sh
+nix run
+```
+
+### Test alerts
+
+```sh
+nix run '.#mock-hook'
+```
