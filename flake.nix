@@ -1,14 +1,27 @@
 {
-  description = "HTTP (webhook) listener to announce messages in IRC channels";
-  inputs.flake-utils.url = "github:numtide/flake-utils";
+  description = "Relay prometheus alerts as matrix messages";
 
-  outputs = { self, nixpkgs, flake-utils }:
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
+  };
+
+  outputs = { self, nixpkgs, flake-utils, ... }:
+
+    {
+      nixosModules = { matrix-hook = import ./module.nix; };
+    } //
+
     flake-utils.lib.eachDefaultSystem (system:
-      with nixpkgs.legacyPackages.${system}; rec {
-
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in rec {
         packages = flake-utils.lib.flattenTree rec {
 
-          matrix-hook = buildGoModule rec {
+          matrix-hook = pkgs.buildGoModule rec {
 
             pname = "matrix-hook";
             version = "1.0.0";
@@ -18,21 +31,26 @@
               "sha256-185Wz9IpJRBmunl+KGj/iy37YeszbT3UYzyk9V994oQ=";
             subPackages = [ "." ];
 
-            meta = with lib; {
-              description = "TODO";
+            meta = with pkgs.lib; {
+              description = "Relay prometheus alerts as matrix messages";
               homepage = "https://github.com/pinpox/matrix-hook";
               license = licenses.gpl3;
               maintainers = with maintainers; [ pinpox ];
-              platforms = platforms.linux;
             };
           };
 
           mock-hook = pkgs.writeScriptBin "mock-hook" ''
             #!${pkgs.stdenv.shell}
-            ${curl}/bin/curl -X POST -d @mock.json http://localhost:9088/alert
+            ${pkgs.curl}/bin/curl -X POST -d @mock.json http://localhost:9088/alert
           '';
         };
 
+        apps = {
+          mock-hook = flake-utils.lib.mkApp { drv = packages.mock-hook; };
+          matrix-hook = flake-utils.lib.mkApp { drv = packages.matrix-hook; };
+        };
+
         defaultPackage = packages.matrix-hook;
+        defaultApp = apps.matrix-hook;
       });
 }
