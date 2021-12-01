@@ -41,6 +41,13 @@ in {
       description = "Matrix room ID";
     };
 
+    msgTemplatePath = mkOption {
+      type = types.str;
+      default = null;
+      example = "Path to the template to use when rendireng message";
+      description = "/var/lib/tmpl";
+    };
+
     envFile = mkOption {
       type = types.str;
       default = null;

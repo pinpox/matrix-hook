@@ -98,7 +98,7 @@ func main() {
 
 	var err error
 
-	messageTempl, err = htmpl.ParseFiles("./message.html.tmpl")
+	messageTempl, err = htmpl.ParseFiles(os.Getenv("MX_MSG_TEMPLATE"))
 	if err != nil {
 		log.Fatal(err)
 	}
