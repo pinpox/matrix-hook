@@ -41,3 +41,29 @@ nix run
 ```sh
 nix run '.#mock-hook'
 ```
+
+### Module
+
+The flake also includes a NixOS module for ease of use. A minimal configuration
+will look like this:
+
+```nix
+
+# Add to flake inputs
+inputs.matrix-hook.url = "github:pinpox/matrix-hook";
+
+# Import the module in your configuration.nix
+imports = [
+  self.inputs.matrix-hook.nixosModules.matrix-hook
+];
+
+# Enable and set options
+services.matrix-hook = {
+  enable = true;
+  httpAddress = "localhost";
+  matrixHomeserver = "https://matrix.org";
+  matrixUser = "@mr_panic:matrix.org";
+  matrixRoom = "!ilXXXXXXXXXXXXXXXz:matrix.org";
+  envFile = "/var/src/secrets/matrix-hook/envfile";
+};
+```
