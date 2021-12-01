@@ -86,6 +86,7 @@ in {
           "MX_HOMESERVER='${cfg.matrixHomeserver}'"
           "MX_ID='${cfg.matrixUser}'"
           "MX_ROOMID='${cfg.matrixRoom}'"
+          "MX_MSG_TEMPLATE='${cfg.msgTemplatePath}'"
         ];
 
         User = "matrix-hook";
