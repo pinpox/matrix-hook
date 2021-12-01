@@ -66,5 +66,6 @@ services.matrix-hook = {
   matrixUser = "@mr_panic:matrix.org";
   matrixRoom = "!ilXXXXXXXXXXXXXXXz:matrix.org";
   envFile = "/var/src/secrets/matrix-hook/envfile";
+  msgTemplatePath = "${self.inputs.matrix-hook.packages."x86_64-linux".matrix-hook}/bin/message.html.tmpl";
 };
 ```
