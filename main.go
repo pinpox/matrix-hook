@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 
 	"github.com/matrix-org/gomatrix"
@@ -64,6 +65,13 @@ func handleIncomingHooks(w http.ResponseWriter, r *http.Request,
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+
+	b, err := httputil.DumpRequest(r, true)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Println(string(b))
 
 	payload := template.Data{}
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
