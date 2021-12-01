@@ -1,0 +1,9 @@
+<p>
+{{ if eq .Status "firing" }}
+<strong><font color="#ff0000">FIRING</font></strong>
+{{ else if eq .Status "resolved"}} 
+<strong><font color="#00ff00">RESOLVED</font></strong>
+{{ else	}}
+<strong><font>FIRING</font></strong> "
+{{ end }} <code>[{{.Labels.instance}}]</code> >> <b>{{.Labels.alertname}}</b>
+</p>  <p>{{.Annotations.description}}</p>

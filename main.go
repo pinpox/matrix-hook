@@ -1,29 +1,30 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"os"
 
 	"github.com/matrix-org/gomatrix"
 	"github.com/prometheus/alertmanager/template"
+
+	htmpl "html/template"
 )
 
+var messageTempl *htmpl.Template
+
 func getMatrixMessageFor(alert template.Alert) gomatrix.HTMLMessage {
-	var prefix string
-	switch alert.Status {
-	case "firing":
-		prefix = "<strong><font color=\"#ff0000\">FIRING</font></strong> "
-	case "resolved":
-		prefix = "<strong><font color=\"#33cc33\">RESOLVED</font></strong> "
-	default:
-		prefix = fmt.Sprintf("<strong>%v</strong> ", alert.Status)
+
+	var tpl bytes.Buffer
+	if err := messageTempl.Execute(&tpl, alert); err != nil {
+		log.Fatal(err)
 	}
 
-	return gomatrix.GetHTMLMessage("m.text", prefix+alert.Labels["name"]+" >> "+alert.Annotations["summary"])
+	rendered := tpl.String()
+	return gomatrix.GetHTMLMessage("m.text", rendered)
 }
 
 func getMatrixClient(homeserver string, user string, token string, targetRoomID string) *gomatrix.Client {
@@ -66,12 +67,12 @@ func handleIncomingHooks(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	b, err := httputil.DumpRequest(r, true)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// b, err := httputil.DumpRequest(r, true)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
 
-	log.Println(string(b))
+	// log.Println(string(b))
 
 	payload := template.Data{}
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
@@ -82,7 +83,8 @@ func handleIncomingHooks(w http.ResponseWriter, r *http.Request,
 
 	for _, alert := range payload.Alerts {
 		msg := getMatrixMessageFor(alert)
-		log.Printf("> %v", msg.Body)
+		// To also log to systlog TODO add debug variable
+		// log.Printf("> %v", msg.Body)
 		_, err := matrixClient.SendMessageEvent(targetRoomID, "m.room.message", msg)
 		if err != nil {
 			log.Printf(">> Could not forward to Matrix: %v", err)
@@ -93,6 +95,13 @@ func handleIncomingHooks(w http.ResponseWriter, r *http.Request,
 }
 
 func main() {
+
+	var err error
+
+	messageTempl, err = htmpl.ParseFiles("./message.html.tmpl")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Initialize Matrix client.
 	matrixClient := getMatrixClient(
