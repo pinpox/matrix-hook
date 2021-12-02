@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -57,6 +58,31 @@ func getMatrixClient(homeserver string, user string, token string, targetRoomID 
 	}
 
 	return matrixClient
+}
+
+func handleIncomingHooksPlain(w http.ResponseWriter, r *http.Request,
+	matrixClient *gomatrix.Client, targetRoomID string) {
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	bodyBytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("Received valid plain hook from %v", r.RemoteAddr)
+	bodyString := string(bodyBytes)
+	log.Println(bodyString)
+
+	msg := gomatrix.GetHTMLMessage("m.text", bodyString)
+	_, err = matrixClient.SendMessageEvent(targetRoomID, "m.room.message", msg)
+	if err != nil {
+		log.Printf(">> Could not forward to Matrix: %v", err)
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func handleIncomingHooks(w http.ResponseWriter, r *http.Request,
@@ -114,6 +140,10 @@ func main() {
 	// Initialize HTTP server.
 	http.HandleFunc("/alert", func(w http.ResponseWriter, r *http.Request) {
 		handleIncomingHooks(w, r, matrixClient, os.Getenv("MX_ROOMID"))
+	})
+
+	http.HandleFunc("/plain", func(w http.ResponseWriter, r *http.Request) {
+		handleIncomingHooksPlain(w, r, matrixClient, os.Getenv("MX_ROOMID"))
 	})
 
 	var listenAddr = fmt.Sprintf("%v:%v", os.Getenv("HTTP_ADDRESS"), os.Getenv("HTTP_PORT"))
