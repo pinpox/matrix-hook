@@ -1,4 +1,4 @@
-{ lib, pkgs, config, self, ... }:
+{ lib, pkgs, config, self, matrix-hook,... }:
 with lib;
 let cfg = config.pinpox.services.matrix-hook;
 in {
@@ -90,7 +90,7 @@ in {
         ];
 
         User = "matrix-hook";
-        ExecStart = "${ self.packages."${config.nixpkgs.system}".matrix-hook }/bin/matrix-hook";
+        ExecStart = "${matrix-hook}/bin/matrix-hook";
         Restart = "on-failure";
         RestartSec = "5s";
       };
