@@ -1,4 +1,4 @@
-{ lib, pkgs, config, self, matrix-hook,... }:
+{ lib, pkgs, config, self,... }:
 with lib;
 let cfg = config.pinpox.services.matrix-hook;
 in {
@@ -62,6 +62,8 @@ in {
 
   config = mkIf cfg.enable {
 
+          nixpkgs.overlays = [ self.overlay ];
+
     # User and group
     users.users.matrix-hook = {
       isSystemUser = true;
@@ -90,7 +92,8 @@ in {
         ];
 
         User = "matrix-hook";
-        ExecStart = "${matrix-hook}/bin/matrix-hook";
+        ExecStart = "${pkgs.matrix-hook}/bin/matrix-hook";
+
         Restart = "on-failure";
         RestartSec = "5s";
       };

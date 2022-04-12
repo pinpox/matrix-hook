@@ -13,6 +13,21 @@
   outputs = { self, nixpkgs, flake-utils, ... }:
 
     {
+
+ # A Nixpkgs overlay.
+      overlays.default = final: prev: {
+        matrix-hook = self.defaultPackage;
+
+        # hello = with final; stdenv.mkDerivation rec {
+        #   name = "hello-${version}";
+
+        #   src = ./.;
+
+        #   nativeBuildInputs = [ autoreconfHook ];
+        # };
+
+      };
+
       nixosModules = { matrix-hook = import ./module.nix; };
     } //
 
