@@ -62,7 +62,7 @@ in {
 
   config = mkIf cfg.enable {
 
-          nixpkgs.overlays = [ self.overlay ];
+    nixpkgs.overlays = [ self.overlays.default ];
 
     # User and group
     users.users.matrix-hook = {
