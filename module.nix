@@ -99,7 +99,7 @@
         ];
 
         User = "matrix-hook";
-        ExecStart = "${self}/bin/matrix-hook";
+        ExecStart = "${hook-package}/bin/matrix-hook";
         Restart = "on-failure";
         RestartSec = "5s";
       };
