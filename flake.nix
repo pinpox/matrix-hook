@@ -10,11 +10,11 @@
     };
   };
 
-  outputs = {  nixpkgs, flake-utils, ... }:
+  outputs = {  nixpkgs, flake-utils, self, ... }:
 
     {
 
-      nixosModules.matrix-hook = import ./module.nix;
+      nixosModules.matrix-hook = import ./module.nix { hook-package = self.packages.matrix-hook; } ;
 
     } //
 
