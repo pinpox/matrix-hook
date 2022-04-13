@@ -2,7 +2,7 @@
 with pkgs.lib;
 let
   cfg = config.pinpox.services.matrix-hook;
-  matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix { };
+   matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix { };
 in {
 
   options.pinpox.services.matrix-hook = {
