@@ -14,9 +14,6 @@
 
     {
 
-      # A Nixpkgs overlay.
-      # overlays.default = final: prev: { matrix-hook = final.callPackage self.defaultPackage; };
-
       nixosModules.matrix-hook = import ./module.nix;
 
     } //
