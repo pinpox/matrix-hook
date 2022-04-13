@@ -15,9 +15,13 @@
     {
 
       # A Nixpkgs overlay.
-      overlays.default = final: prev: { matrix-hook = final.callPackage self.defaultPackage; };
+      # overlays.default = final: prev: { matrix-hook = final.callPackage self.defaultPackage; };
 
       nixosModules.matrix-hook = import ./module.nix;
+
+      nixosModules.age = import ./modules/age.nix;
+      nixosModule = self.nixosModules.age;
+
     } //
 
     flake-utils.lib.eachDefaultSystem (system:
@@ -25,30 +29,7 @@
       in rec {
         packages = flake-utils.lib.flattenTree rec {
 
-          matrix-hook = pkgs.buildGoModule rec {
-
-            pname = "matrix-hook";
-            version = "1.0.0";
-
-            src = ./.;
-            vendorSha256 =
-              "sha256-185Wz9IpJRBmunl+KGj/iy37YeszbT3UYzyk9V994oQ=";
-            subPackages = [ "." ];
-            installPhase = ''
-              mkdir -p $out/bin
-              cp $GOPATH/bin/matrix-hook $out/bin/matrix-hook
-              cp message.html.tmpl $out/bin/message.html.tmpl
-            '';
-
-            # mkdir -p $out/bin
-            # mv matrix-hook $out/bin/matrix-hook
-            meta = with pkgs.lib; {
-              description = "Relay prometheus alerts as matrix messages";
-              homepage = "https://github.com/pinpox/matrix-hook";
-              license = licenses.gpl3;
-              maintainers = with maintainers; [ pinpox ];
-            };
-          };
+          matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix { };
 
           mock-hook = pkgs.writeScriptBin "mock-hook" ''
             #!${pkgs.stdenv.shell}
