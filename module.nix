@@ -1,8 +1,6 @@
-{ pkgs, config, ... }:
-with pkgs.lib;
-let
-  cfg = config.pinpox.services.matrix-hook;
-  # matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix { };
+{ lib, pkgs, config, self, matrix-hook,... }:
+with lib;
+let cfg = config.pinpox.services.matrix-hook;
 in {
 
   options.pinpox.services.matrix-hook = {
@@ -62,42 +60,41 @@ in {
     };
   };
 
-  # config = mkIf cfg.enable {
+  config = mkIf cfg.enable {
 
-#     # User and group
-#     users.users.matrix-hook = {
-#       isSystemUser = true;
-#       description = "matrix-hooksystem user";
-#       extraGroups = [ "matrix-hook" ];
-#       group = "matrix-hook";
-#     };
+    # User and group
+    users.users.matrix-hook = {
+      isSystemUser = true;
+      description = "matrix-hooksystem user";
+      extraGroups = [ "matrix-hook" ];
+      group = "matrix-hook";
+    };
 
-#     users.groups.matrix-hook = { name = "matrix-hook"; };
+    users.groups.matrix-hook = { name = "matrix-hook"; };
 
-#     # Service
-#     systemd.services.matrix-hook = {
-#       wantedBy = [ "multi-user.target" ];
-#       after = [ "network.target" ];
-#       description = "Startmatrix-hook";
-#       serviceConfig = {
+    # Service
+    systemd.services.matrix-hook = {
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      description = "Startmatrix-hook";
+      serviceConfig = {
 
-#         EnvironmentFile = [ cfg.envFile ];
-#         Environment = [
-#           "HTTP_ADDRESS='${cfg.httpAddress}'"
-#           "HTTP_PORT='${cfg.httpPort}'"
-#           "MX_HOMESERVER='${cfg.matrixHomeserver}'"
-#           "MX_ID='${cfg.matrixUser}'"
-#           "MX_ROOMID='${cfg.matrixRoom}'"
-#           "MX_MSG_TEMPLATE='${cfg.msgTemplatePath}'"
-#         ];
+        EnvironmentFile = [ cfg.envFile ];
+        Environment = [
+          "HTTP_ADDRESS='${cfg.httpAddress}'"
+          "HTTP_PORT='${cfg.httpPort}'"
+          "MX_HOMESERVER='${cfg.matrixHomeserver}'"
+          "MX_ID='${cfg.matrixUser}'"
+          "MX_ROOMID='${cfg.matrixRoom}'"
+          "MX_MSG_TEMPLATE='${cfg.msgTemplatePath}'"
+        ];
 
-#         User = "matrix-hook";
-#         # ExecStart = "${matrix-hook}/bin/matrix-hook";
+        User = "matrix-hook";
+        ExecStart = "${self}/bin/matrix-hook";
+        Restart = "on-failure";
+        RestartSec = "5s";
+      };
+    };
 
-#         Restart = "on-failure";
-#         RestartSec = "5s";
-#       };
-#     };
-
-  # };
+  };
 }
