@@ -15,7 +15,7 @@
     {
 
       # A Nixpkgs overlay.
-      overlays.default = final: prev: { matrix-hook = self.defaultPackage; };
+      overlays.default = final: prev: { matrix-hook-package = self.defaultPackage; };
 
       nixosModules = {
         matrix-hook =
