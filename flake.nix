@@ -114,7 +114,7 @@
                   ];
 
                   User = "matrix-hook";
-                  ExecStart = "${pkgs.matrix-hook}/bin/matrix-hook";
+                  ExecStart = "${pkgs.matrix-hook-package}/bin/matrix-hook";
 
                   Restart = "on-failure";
                   RestartSec = "5s";
