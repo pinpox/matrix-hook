@@ -1,13 +1,5 @@
 { hook-package }: { config, pkgs, lib, ...}: with lib;
 
-
-
-
-  # some.options = somepackage:
-
-
-
-
   # with lib;
   let cfg = config.pinpox.services.matrix-hook;
   in {
