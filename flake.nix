@@ -19,9 +19,6 @@
 
       nixosModules.matrix-hook = import ./module.nix;
 
-      nixosModules.age = import ./modules/age.nix;
-      nixosModule = self.nixosModules.age;
-
     } //
 
     flake-utils.lib.eachDefaultSystem (system:

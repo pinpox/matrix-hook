@@ -1,8 +1,8 @@
-{ pkgs, config, self, ... }:
+{ pkgs, config, ... }:
 with pkgs.lib;
-let 
+let
   cfg = config.pinpox.services.matrix-hook;
-  matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix {};
+  matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix { };
 in {
 
   options.pinpox.services.matrix-hook = {
@@ -63,8 +63,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-
-    nixpkgs.overlays = [ self.overlays.default ];
 
     # User and group
     users.users.matrix-hook = {
