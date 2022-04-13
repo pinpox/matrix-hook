@@ -92,7 +92,7 @@ in {
         ];
 
         User = "matrix-hook";
-        ExecStart = "${matrix-hook}/bin/matrix-hook";
+        # ExecStart = "${matrix-hook}/bin/matrix-hook";
 
         Restart = "on-failure";
         RestartSec = "5s";
