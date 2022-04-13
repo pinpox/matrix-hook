@@ -15,7 +15,7 @@
     {
 
       nixosModules.matrix-hook = import ./module.nix {
-        hook-package = self.packages."x86_64-linux".matrix-hook;
+        self-packages = self.packages;
       };
 
     } //
