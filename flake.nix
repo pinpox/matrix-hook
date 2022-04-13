@@ -14,7 +14,7 @@
 
     {
 
-      nixosModules.matrix-hook = import ./module.nix { hook-package = self.packages.matrix-hook; } ;
+      nixosModules.matrix-hook = import ./module.nix { hook-package = self.defaultPackage; } ;
 
     } //
 
