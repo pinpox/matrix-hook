@@ -10,7 +10,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
+  outputs = {  nixpkgs, flake-utils, ... }:
 
     {
 
