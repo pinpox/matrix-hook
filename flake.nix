@@ -14,9 +14,19 @@
 
     {
 
-      nixosModules.matrix-hook = import ./module.nix {
-        hook-package = self.packages."x86_64-linux".matrix-hook;
-      };
+      # nixosModules.matrix-hook = import ./module.nix {
+      #   hook-package = self.packages."x86_64-linux".matrix-hook;
+      # };
+
+      nixosModule = ({ pkgs, ... }: {
+        imports = [ ./module.nix ];
+        # defined overlays injected by the nixflake
+        nixpkgs.overlays = [
+          (_self: _super: {
+            matrix-hook = self.packages.${pkgs.system}.matrix-hook;
+          })
+        ];
+      });
 
     } //
 
