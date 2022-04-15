@@ -13,11 +13,6 @@
   outputs = { nixpkgs, flake-utils, self, ... }:
 
     {
-
-      # nixosModules.matrix-hook = import ./module.nix {
-      #   hook-package = self.packages."x86_64-linux".matrix-hook;
-      # };
-
       nixosModule = ({ pkgs, ... }: {
         imports = [ ./module.nix ];
         # defined overlays injected by the nixflake
@@ -27,7 +22,6 @@
           })
         ];
       });
-
     } //
 
     flake-utils.lib.eachDefaultSystem (system:
