@@ -1,12 +1,11 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ buildGoModule, lib, vendorHash ? "sha256-185Wz9IpJRBmunl+KGj/iy37YeszbT3UYzyk9V994oQ=" }:
 
-pkgs.buildGoModule rec {
-
+buildGoModule {
   pname = "matrix-hook";
   version = "1.0.0";
 
   src = ./..;
-  vendorSha256 = "sha256-185Wz9IpJRBmunl+KGj/iy37YeszbT3UYzyk9V994oQ=";
+  inherit vendorHash;
   subPackages = [ "." ];
   installPhase = ''
     mkdir -p $out/bin
@@ -16,7 +15,7 @@ pkgs.buildGoModule rec {
 
   # mkdir -p $out/bin
   # mv matrix-hook $out/bin/matrix-hook
-  meta = with pkgs.lib; {
+  meta = with lib; {
     description = "Relay prometheus alerts as matrix messages";
     homepage = "https://github.com/pinpox/matrix-hook";
     license = licenses.gpl3;
