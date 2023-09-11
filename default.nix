@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> {}
-, vendorHash ? "sha256-185Wz9IpJRBmunl+KGj/iy37YeszbT3UYzyk9V994oQ="
+, vendorHash ? "sha256-1SBXOA8+3D5pERut0GCwnempmhgIlqnu5rdcVDVW0OU="
 }:
 
 pkgs.buildGoModule {
