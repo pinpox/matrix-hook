@@ -27,8 +27,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in rec {
-        packages = flake-utils.lib.flattenTree rec {
-
+        packages = flake-utils.lib.flattenTree {
           matrix-hook = pkgs.callPackage ./pkgs/matrix-hook.nix { };
 
           mock-hook = pkgs.writeScriptBin "mock-hook" ''

@@ -1,0 +1,20 @@
+name: "Test"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  tests:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v23
+      with:
+        nix_path: "${{ matrix.nixPath }}"
+    - name: Build nix packages
+      run: nix build -L --keep-going
