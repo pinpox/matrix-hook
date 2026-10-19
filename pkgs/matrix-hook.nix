@@ -1,4 +1,4 @@
-{ buildGoModule, lib, vendorHash ? "sha256-hiO8EKQnvX1iJmUSEzFDClqnGjUgrLWgjlMFuACbNl0=" }:
+{ buildGoModule, lib, vendorHash ? "" }:
 
 buildGoModule {
   pname = "matrix-hook";
