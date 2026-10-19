@@ -12,7 +12,7 @@ jobs:
         os: [ ubuntu-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - uses: cachix/install-nix-action@v31.11.2
       with:
         nix_path: "${{ matrix.nixPath }}"
