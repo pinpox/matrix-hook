@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v7
-    - uses: cachix/install-nix-action@31.11.3
+    - uses: cachix/install-nix-action@v31.11.5
       with:
         nix_path: "${{ matrix.nixPath }}"
     - name: Build nix packages
